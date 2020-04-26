@@ -1,36 +1,74 @@
-"""
-Python Web Development Techdegree
-Project 1 - Number Guessing Game
---------------------------------
-
-For this first project we will be using Workspaces.
-
-NOTE: If you strongly prefer to work locally on your own computer, you can totally do that by clicking: File -> Download Workspace in the file menu after you fork the snapshot of this workspace.
-
-"""
-
 import random
+import sys
 
+DASH_CHARACTER_REPEAT_AMOUNT = 40
+
+def print_repeat_string(string, amount):
+    return string * amount
+
+def begin_game():
+    hidden_number = random.randint(1, 10)
+    number_guesses = 0
+    print("")
+
+    while True:
+        number_guesses += 1
+        try:
+            user_input = int(input("Pick a number between 1 and 10:  "))
+            if user_input > 10 or user_input < 1:
+                raise ValueError
+        except ValueError:
+            print("Oops!  That was no valid number.  Try again...")
+            continue
+
+        if user_input > hidden_number:
+            print("It's lower")
+            continue
+        elif user_input < hidden_number:
+            print("It's higher")
+            continue
+
+        print("You got it! It took you {} tries".format(number_guesses))
+        break
+    return number_guesses
+
+def play_again():
+    try:
+        play_again = str(input("Would you like to play again? [y]es/[n]o"))
+        if play_again != 'y' and play_again != 'n':
+            raise ValueError
+    except ValueError:
+        raise ValueError
+
+    if play_again == 'y':
+        return True
+    return False
 
 def start_game():
-    """Psuedo-code Hints
+    print(print_repeat_string("-", DASH_CHARACTER_REPEAT_AMOUNT))
+    print("  Welcome to the Number Guessing Game!")
+    print(print_repeat_string("-", DASH_CHARACTER_REPEAT_AMOUNT))
+    high_score = 0
 
-    When the program starts, we want to:
-    ------------------------------------
-    1. Display an intro/welcome message to the player.
-    2. Store a random number as the answer/solution.
-    3. Continuously prompt the player for a guess.
-      a. If the guess greater than the solution, display to the player "It's lower".
-      b. If the guess is less than the solution, display to the player "It's higher".
+    while True:
+        if high_score != 0:
+            print("\nthe HIGHSCORE is {}".format(high_score))
 
-    4. Once the guess is correct, stop looping, inform the user they "Got it"
-         and show how many attempts it took them to get the correct number.
-    5. Let the player know the game is ending, or something that indicates the game is over.
+        new_score = begin_game()
 
-    ( You can add more features/enhancements if you'd like to. )
-    """
-    # write your code inside this function.
+        if high_score == 0:
+            high_score = new_score
+        elif high_score != 0 and new_score < high_score:
+            high_score = new_score
 
+        while True:
+            try:
+                if not play_again():
+                    print("Shutting down.....")
+                    sys.exit(0)
+                break
+            except Exception:
+                print("Please enter 'y' or 'n' as response")
 
 if __name__ == '__main__':
     # Kick off the program by calling the start_game function.
